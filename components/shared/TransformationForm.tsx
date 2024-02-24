@@ -32,6 +32,8 @@ import { CustomField } from "./CustomField";
 import { useState, useTransition } from "react";
 import { AspectRatioKey, debounce, deepMergeObjects } from "@/lib/utils";
 import MediaUploader from "./MediaUploader";
+import TransformedImage from "./TransformedImage";
+import { updateCredits } from "@/lib/actions/user.actions";
 
 export const formSchema = z.object({
   title: z.string(),
@@ -115,7 +117,7 @@ const TransformationForm = ({
     }, 1000);
   };
 
-  // TODO: Return to this later
+  // TODO: Update creditFee based on transformation type
   const onTransformHandler = async () => {
     setIsTransforming(true);
 
@@ -126,8 +128,8 @@ const TransformationForm = ({
     setNewTransformation(null);
 
     startTransition(async () => {
-      // await updateCredits(userId, creditFee);
-    })
+      await updateCredits(userId, -1);
+    });
   };
 
   return (
@@ -224,7 +226,7 @@ const TransformationForm = ({
             name="publicId"
             className="flex size-full flex-col"
             render={({ field }) => (
-              <MediaUploader 
+              <MediaUploader
                 onValueChange={field.onChange}
                 setImage={setImage}
                 publicId={field.value}
@@ -232,6 +234,15 @@ const TransformationForm = ({
                 type={type}
               />
             )}
+          />
+
+          <TransformedImage
+            image={image}
+            type={type}
+            title={form.getValues().title}
+            isTransforming={isTransforming}
+            setIsTransforming={setIsTransforming}
+            transformationConfig={transformationConfig}
           />
         </div>
 
