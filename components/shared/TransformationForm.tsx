@@ -64,17 +64,17 @@ const TransformationForm = ({
   const [isTransforming, setIsTransforming] = useState(false);
   const [transformationConfig, setTransformationConfig] = useState(config);
   const [isPending, startTransition] = useTransition();
-  const router = useRouter()
+  const router = useRouter();
 
   const initialValues =
     data && action === "Update"
       ? {
-        title: data?.title,
-        aspectRatio: data?.aspectRatio,
-        color: data?.color,
-        prompt: data?.prompt,
-        publicId: data?.publicId,
-      }
+          title: data?.title,
+          aspectRatio: data?.aspectRatio,
+          color: data?.color,
+          prompt: data?.prompt,
+          publicId: data?.publicId,
+        }
       : defaultValues;
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -89,8 +89,8 @@ const TransformationForm = ({
         width: image?.width,
         height: image?.height,
         src: image?.publicId,
-        ...transformationConfig
-      })
+        ...transformationConfig,
+      });
 
       const imageData = {
         title: values.title,
@@ -104,39 +104,39 @@ const TransformationForm = ({
         aspectRatio: values.aspectRatio,
         prompt: values.prompt,
         color: values.color,
-      }
+      };
 
-      if (action === 'Add') {
+      if (action === "Add") {
         try {
           const newImage = await addImage({
             image: imageData,
             userId,
-            path: '/'
-          })
+            path: "/",
+          });
 
           if (newImage) {
-            form.reset()
-            setImage(data)
-            router.push(`/transformations/${newImage._id}`)
+            form.reset();
+            setImage(data);
+            router.push(`/transformations/${newImage._id}`);
           }
         } catch (error) {
           console.log(error);
         }
       }
 
-      if (action === 'Update') {
+      if (action === "Update") {
         try {
           const updatedImage = await updateImage({
             image: {
               ...imageData,
-              _id: data._id
+              _id: data._id,
             },
             userId,
-            path: `/transformations/${data._id}`
-          })
+            path: `/transformations/${data._id}`,
+          });
 
           if (updatedImage) {
-            router.push(`/transformations/${updatedImage._id}`)
+            router.push(`/transformations/${updatedImage._id}`);
           }
         } catch (error) {
           console.log(error);
@@ -144,7 +144,7 @@ const TransformationForm = ({
       }
     }
 
-    setIsSubmitting(false)
+    setIsSubmitting(false);
   }
 
   const onSelectFieldHandler = (
@@ -179,9 +179,9 @@ const TransformationForm = ({
           [fieldName === "prompt" ? "prompt" : "to"]: value,
         },
       }));
+    }, 1000)();
 
-      return onChangeField(value);
-    }, 1000);
+    return onChangeField(value);
   };
 
   const onTransformHandler = async () => {
@@ -199,15 +199,15 @@ const TransformationForm = ({
   };
 
   useEffect(() => {
-    if(image && (type === 'restore' || type === 'removeBackground')) {
-      setNewTransformation(transformationType.config)
+    if (image && (type === "restore" || type === "removeBackground")) {
+      setNewTransformation(transformationType.config);
     }
-  }, [image, transformationType.config, type])
+  }, [image, transformationType.config, type]);
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-      {creditBalance < Math.abs(creditFee) && <InsufficientCreditsModal />}
+        {creditBalance < Math.abs(creditFee) && <InsufficientCreditsModal />}
         <CustomField
           control={form.control}
           name="title"
@@ -227,6 +227,7 @@ const TransformationForm = ({
                 onValueChange={(value) =>
                   onSelectFieldHandler(value, field.onChange)
                 }
+                value="field.value"
               >
                 <SelectTrigger className="select-field">
                   <SelectValue placeholder="Select size" />
