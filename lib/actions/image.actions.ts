@@ -92,7 +92,7 @@ export async function getImageById(imageId: string) {
   }
 }
 
-// GET IMAGES
+// GET ALL IMAGES
 export async function getAllImages({ limit = 9, page = 1, searchQuery = '' }: {
   limit?: number;
   page: number;
@@ -108,7 +108,7 @@ export async function getAllImages({ limit = 9, page = 1, searchQuery = '' }: {
       secure: true,
     })
 
-    let expression = 'folder=imaginify';
+    let expression = 'folder=snapvista';
 
     if (searchQuery) {
       expression += ` AND ${searchQuery}`
